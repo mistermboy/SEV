@@ -6,6 +6,12 @@ class GameLayer extends Layer {
     }
 
     iniciar() {
+
+        this.fondoPuntos =
+            new Fondo(imagenes.icono_puntos, 480*0.85,320*0.05);
+
+        this.puntos = new Texto(0,480*0.9,320*0.07 );
+
         this.jugador = new Jugador(50, 50);
         this.fondo = new Fondo(imagenes.fondo,480*0.5,320*0.5);
 
@@ -62,6 +68,7 @@ class GameLayer extends Layer {
 
                     this.disparosJugador.splice(i, 1);
                     this.enemigos.splice(j, 1);
+                    this.puntos.valor++;
                 }
             }
         }
@@ -84,6 +91,12 @@ class GameLayer extends Layer {
         for (var i=0; i < this.enemigos.length; i++){
             this.enemigos[i].dibujar();
         }
+
+        //HUD
+
+        this.fondoPuntos.dibujar();
+        this.puntos.dibujar();
+
     }
 
     procesarControles( ){
