@@ -24,6 +24,9 @@ class GameLayer extends Layer {
     }
 
     actualizar (){
+
+        this.fondo.vx = -6;
+        this.fondo.actualizar();
         //Actualizo elementos
         // Generar Enemigos
         if (this.iteracionesCrearEnemigos == null){
@@ -32,7 +35,7 @@ class GameLayer extends Layer {
         // iteracionesCrearEnemigos tiene que ser un número
         this.iteracionesCrearEnemigos ++;
 
-        if ( this.iteracionesCrearEnemigos > 110){
+        if ( this.iteracionesCrearEnemigos > 70){
             var rX = Math.random() * (600 - 500) + 500;
             var rY = Math.random() * (300 - 60) + 60;
             this.enemigos.push(new Enemigo(rX,rY));
@@ -74,7 +77,14 @@ class GameLayer extends Layer {
         }
 
 
+        // Eliminar disparos fuera de pantalla
+        for (var i=0; i < this.disparosJugador.length; i++){
+            if ( this.disparosJugador[i] != null &&
+                !this.disparosJugador[i].estaEnPantalla()){
 
+                this.disparosJugador.splice(i, 1);
+            }
+        }
 
 
     }
