@@ -19,7 +19,9 @@ class GameLayer extends Layer {
         this.enemigos.push(new Enemigo(300,50));
         this.enemigos.push(new Enemigo(350,200));
 
-        this.disparosJugador = []
+        this.disparosJugador = [];
+
+        this.disparosEnemigo = [];
 
         this.bombas = [];
 
@@ -89,6 +91,10 @@ class GameLayer extends Layer {
             this.disparosJugador[i].actualizar();
         }
 
+        for (var i=0; i < this.disparosEnemigo.length; i++) {
+            this.disparosEnemigo[i].actualizar();
+        }
+
         for (var i=0; i < this.bombas.length; i++) {
             this.bombas[i].actualizar();
         }
@@ -147,6 +153,13 @@ class GameLayer extends Layer {
             }
         }
 
+        for (var i=0; i < this.enemigos.length; i++){
+
+            var nuevoDisparo = this.enemigos[i].disparar();
+            if ( nuevoDisparo != null ) {
+                this.disparosEnemigo.push(nuevoDisparo);
+            }
+        }
 
     }
 
@@ -157,6 +170,9 @@ class GameLayer extends Layer {
             this.disparosJugador[i].dibujar();
         }
 
+        for (var i=0; i < this.disparosEnemigo.length; i++) {
+            this.disparosEnemigo[i].dibujar();
+        }
 
         this.jugador.dibujar();
         for (var i=0; i < this.enemigos.length; i++){

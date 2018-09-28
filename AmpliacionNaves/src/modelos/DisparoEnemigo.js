@@ -2,11 +2,12 @@ class DisparoEnemigo extends Modelo {
 
     constructor(x, y) {
         super(imagenes.disparo_enemigo, x, y)
-        this.vx = -9;
+        this.vx = -4;
     }
 
     actualizar (){
-        this.x = this.x - this.vx;
+        this.x = this.x + this.vx;
     }
+
 
 }

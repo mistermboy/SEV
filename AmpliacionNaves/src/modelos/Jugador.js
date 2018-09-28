@@ -6,7 +6,7 @@ class Jugador extends Modelo {
         this.vy = 0; // velocidadY
 
         // Disparo
-        this.cadenciaDisparo = 30;
+        this.cadenciaDisparo = 10;
         this.tiempoDisparo = 0;
     }
 
@@ -17,8 +17,10 @@ class Jugador extends Modelo {
             this.tiempoDisparo--;
         }
 
-        this.x = this.x + this.vx;
-        this.y = this.y + this.vy;
+        if(this.x + this.vx > 0 && this.x + this.vx < 480 && this.y + this.vy > 0 && this.y + this.vy < 320){
+            this.x = this.x + this.vx;
+            this.y = this.y + this.vy;
+        }
     }
 
 
