@@ -12,8 +12,8 @@ class Enemigo extends Modelo {
         this.vx = 1;
 
         // Disparo
-        this.cadenciaDisparo = 100;
-        this.tiempoDisparo = 0;
+        this.cadenciaDisparoEnemigo = 100;
+        this.tiempoDisparoEnemigo = 0;
 
     }
 
@@ -21,8 +21,8 @@ class Enemigo extends Modelo {
 
 
         // Tiempo Disparo
-        if ( this.tiempoDisparo > 0 ) {
-            this.tiempoDisparo--;
+        if ( this.tiempoDisparoEnemigo > 0 ) {
+            this.tiempoDisparoEnemigo--;
         }
 
         // Actualizar animación
@@ -40,9 +40,9 @@ class Enemigo extends Modelo {
 
 
     disparar(){
-        if ( this.tiempoDisparo == 0) {
+        if ( this.tiempoDisparoEnemigo == 0) {
             // reiniciar Cadencia
-            this.tiempoDisparo = this.cadenciaDisparo;
+            this.tiempoDisparoEnemigo = this.cadenciaDisparoEnemigo;
             return new DisparoEnemigo(this.x, this.y);
         } else {
             return null;

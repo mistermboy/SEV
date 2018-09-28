@@ -166,7 +166,7 @@ class GameLayer extends Layer {
         for (var i=0; i < this.enemigos.length; i++){
 
             var nuevoDisparo = this.enemigos[i].disparar();
-            if ( nuevoDisparo != null ) {
+            if ( nuevoDisparo != null && this.enemigos[i].estaEnPantalla()) {
                 this.disparosEnemigo.push(nuevoDisparo);
             }
         }
