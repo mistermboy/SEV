@@ -41,5 +41,4 @@ class Jugador extends Modelo {
     }
 
 
-
 }

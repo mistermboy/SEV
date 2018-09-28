@@ -23,6 +23,13 @@ class GameLayer extends Layer {
 
         this.bombas = [];
 
+        this.monedas = [];
+
+        this.monedas.push(new Moneda(400,20));
+        this.monedas.push(new Moneda(370,150));
+        this.monedas.push(new Moneda(360,160));
+        this.monedas.push(new Moneda(430,190));
+
     }
 
     actualizar (){
@@ -58,6 +65,19 @@ class GameLayer extends Layer {
             this.iteracionesCrearBombas = 0;
         }
 
+        //Generar Monedas
+        if (this.iteracionesCrearMonedas == null){
+            this.iteracionesCrearMonedas = 0;
+        }
+
+        this.iteracionesCrearMonedas ++;
+        if ( this.iteracionesCrearMonedas > 50){
+            var rX = Math.random() * (600 - 500) + 500;
+            var rY = Math.random() * (300 - 60) + 60;
+            this.monedas.push(new Moneda(rX,rY));
+            this.iteracionesCrearMonedas = 0;
+        }
+
 
 
         this.jugador.actualizar();
@@ -73,6 +93,9 @@ class GameLayer extends Layer {
             this.bombas[i].actualizar();
         }
 
+        for (var i=0; i < this.monedas.length; i++){
+            this.monedas[i].actualizar();
+        }
 
         // Miro Colisiones
 
@@ -100,9 +123,17 @@ class GameLayer extends Layer {
         // Colisiones jugador - bomba
         for (var i=0; i < this.bombas.length; i++){
             if ( this.jugador.colisiona(this.bombas[i])){
-                console.log("pum")
+                this.puntos.valor += this.enemigos.length;
                 this.enemigos = [];
                 this.bombas.splice(i,1);
+            }
+        }
+
+        //Colisiones jugador - moneda
+        for (var i=0; i < this.monedas.length; i++){
+            if ( this.jugador.colisiona(this.monedas[i])){
+                this.monedas.splice(i, 1);
+                this.puntos.valor += 5;
             }
         }
 
@@ -134,6 +165,10 @@ class GameLayer extends Layer {
 
         for (var i=0; i < this.bombas.length; i++){
             this.bombas[i].dibujar();
+        }
+
+        for (var i=0; i < this.monedas.length; i++){
+            this.monedas[i].dibujar();
         }
 
         //HUD
