@@ -7,21 +7,22 @@ class GameLayer extends Layer {
 
     iniciar() {
 
+        this.scrollX = 0;
+
+        this.bloques = [];
+
         this.fondoPuntos =
             new Fondo(imagenes.icono_puntos, 480*0.85,320*0.05);
 
         this.puntos = new Texto(0,480*0.9,320*0.07 );
 
-        this.jugador = new Jugador(50, 50);
-        this.fondo = new Fondo(imagenes.fondo,480*0.5,320*0.5);
+        this.fondo = new Fondo(imagenes.fondo_2,480*0.5,320*0.5);
 
         this.enemigos = [];
-        this.enemigos.push(new Enemigo(300,50));
-        this.enemigos.push(new Enemigo(350,200));
 
         this.disparosJugador = []
 
-        this.bombas = [];
+        this.cargarMapa("res/0.txt");
 
     }
 
@@ -29,37 +30,8 @@ class GameLayer extends Layer {
 
         this.fondo.vx = -6;
         this.fondo.actualizar();
+
         //Actualizo elementos
-        // Generar Enemigos
-        if (this.iteracionesCrearEnemigos == null){
-            this.iteracionesCrearEnemigos = 0;
-        }
-        // iteracionesCrearEnemigos tiene que ser un número
-        this.iteracionesCrearEnemigos ++;
-
-        if ( this.iteracionesCrearEnemigos > 70){
-            var rX = Math.random() * (600 - 500) + 500;
-            var rY = Math.random() * (300 - 60) + 60;
-            this.enemigos.push(new Enemigo(rX,rY));
-            this.iteracionesCrearEnemigos = 0;
-        }
-
-        //Generar bombas
-        if (this.iteracionesCrearBombas == null){
-            this.iteracionesCrearBombas = 0;
-        }
-
-        this.iteracionesCrearBombas++;
-
-        if ( this.iteracionesCrearBombas > 300){
-            var rX = Math.random() * (600 - 500) + 500;
-            var rY = Math.random() * (300 - 60) + 60;
-            this.bombas.push(new Bomba(rX,rY));
-            this.iteracionesCrearBombas = 0;
-        }
-
-
-
         this.jugador.actualizar();
         for (var i=0; i < this.enemigos.length; i++){
             this.enemigos[i].actualizar();
@@ -69,9 +41,6 @@ class GameLayer extends Layer {
             this.disparosJugador[i].actualizar();
         }
 
-        for (var i=0; i < this.bombas.length; i++) {
-            this.bombas[i].actualizar();
-        }
 
 
         // Miro Colisiones
@@ -91,17 +60,19 @@ class GameLayer extends Layer {
                     this.disparosJugador[i].colisiona(this.enemigos[j])) {
 
                     this.disparosJugador.splice(i, 1);
-                    this.enemigos.splice(j, 1);
+                    this.enemigos[j].impactado();
                     this.puntos.valor++;
                 }
             }
         }
 
-        // Colisiones jugador - bomba
-        for (var i=0; i < this.bombas.length; i++){
-            if ( this.jugador.colisiona(this.bombas[i])){
-                this.enemigos = [];
-                this.bombas.splice(i,1);
+
+        // Enemigos muertos fuera del juego
+        for (var j=0; j < this.enemigos.length; j++){
+            if ( this.enemigos[j] != null &&
+                this.enemigos[j].estado == estados.muerto  ) {
+
+                this.enemigos.splice(j, 1);
             }
         }
 
@@ -118,22 +89,28 @@ class GameLayer extends Layer {
 
     }
 
-    dibujar (){
-        this.fondo.dibujar();
+    calcularScroll(){
+        this.scrollX = this.jugador.x -100;
+    }
 
-        for (var i=0; i < this.disparosJugador.length; i++) {
-            this.disparosJugador[i].dibujar();
+
+    dibujar (){
+
+        this.calcularScroll();
+        this.fondo.dibujar();
+        for (var i=0; i < this.bloques.length; i++){
+            this.bloques[i].dibujar(this.scrollX);
         }
 
+        for (var i=0; i < this.disparosJugador.length; i++) {
+            this.disparosJugador[i].dibujar(this.scrollX);
+        }
 
         this.jugador.dibujar();
         for (var i=0; i < this.enemigos.length; i++){
-            this.enemigos[i].dibujar();
+            this.enemigos[i].dibujar(this.scrollX);
         }
 
-        for (var i=0; i < this.bombas.length; i++){
-            this.bombas[i].dibujar();
-        }
 
         //HUD
 
@@ -174,6 +151,53 @@ class GameLayer extends Layer {
         }
 
     }
+
+    cargarMapa(ruta) {
+        var fichero = new XMLHttpRequest();
+        fichero.open("GET", ruta, false);
+        fichero.onreadystatechange = function () {
+            var texto = fichero.responseText;
+            var lineas = texto.split('\n');
+            for (var i = 0; i < lineas.length; i++){
+                var linea = lineas[i];
+                for (var j = 0; j < linea.length; j++){
+                    var simbolo = linea[j];
+                    var x = 40/2 + j * 40; // x central
+                    var y = 32 + i * 32; // y de abajo
+                    this.cargarObjetoMapa(simbolo,x,y);
+                }
+            }
+        }.bind(this);
+
+        fichero.send(null);
+    }
+
+
+    cargarObjetoMapa(simbolo, x, y){
+        switch(simbolo) {
+            case "1":
+                this.jugador = new Jugador(x, y);
+                // modificación para empezar a contar desde el suelo
+                this.jugador.y = this.jugador.y - this.jugador.alto/2;
+                break;
+            case "#":
+                var bloque = new Bloque(imagenes.bloque_tierra, x,y);
+                bloque.y = bloque.y - bloque.alto/2;
+                // modificación para empezar a contar desde el suelo
+                this.bloques.push(bloque);
+                break;
+            case "E":
+                var enemigo = new Enemigo(x,y);
+                enemigo.y = enemigo.y - enemigo.alto/2;
+                // modificación para empezar a contar desde el suelo
+                this.enemigos.push(enemigo);
+                break;
+
+        }
+    }
+
+
+
 
 
 }
