@@ -100,6 +100,7 @@ class GameLayer extends Layer {
         // Colisiones jugador - bomba
         for (var i=0; i < this.bombas.length; i++){
             if ( this.jugador.colisiona(this.bombas[i])){
+                console.log("pum")
                 this.enemigos = [];
                 this.bombas.splice(i,1);
             }

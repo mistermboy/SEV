@@ -1,7 +1,7 @@
 class Bomba extends Modelo {
 
     constructor(x, y) {
-        super(imagenes.asteroide, x, y)
+        super(imagenes.bomba, x, y)
 
         this.vy = 0;
         this.vx = 1;
