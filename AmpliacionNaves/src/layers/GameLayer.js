@@ -126,6 +126,15 @@ class GameLayer extends Layer {
             }
         }
 
+        //Colisiones disparoEnemigo - jugador
+        for (var i=0; i < this.disparosEnemigo.length; i++){
+                if (this.disparosEnemigo[i] != null &&
+                    this.disparosEnemigo[i].colisiona(this.jugador)) {
+                    this.iniciar();
+                }
+
+        }
+
         // Colisiones jugador - bomba
         for (var i=0; i < this.bombas.length; i++){
             if ( this.jugador.colisiona(this.bombas[i])){
@@ -153,6 +162,7 @@ class GameLayer extends Layer {
             }
         }
 
+        // Generamos disparos para los enemigos
         for (var i=0; i < this.enemigos.length; i++){
 
             var nuevoDisparo = this.enemigos[i].disparar();
