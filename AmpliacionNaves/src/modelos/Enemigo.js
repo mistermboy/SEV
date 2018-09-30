@@ -33,10 +33,10 @@ class Enemigo extends Modelo {
     }
 
 
+
     dibujar (){
         this.animacion.dibujar(this.x, this.y);
     }
-
 
 
     disparar(){

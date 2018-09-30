@@ -108,7 +108,8 @@ class GameLayer extends Layer {
         //Enemigo con jugador
         for (var i=0; i < this.enemigos.length; i++){
             if ( this.jugador.colisiona(this.enemigos[i])){
-                this.iniciar();
+                this.enemigos.splice(i, 1);
+                this.jugador.vidas--;
             }
         }
 
@@ -130,7 +131,8 @@ class GameLayer extends Layer {
         for (var i=0; i < this.disparosEnemigo.length; i++){
                 if (this.disparosEnemigo[i] != null &&
                     this.disparosEnemigo[i].colisiona(this.jugador)) {
-                    this.iniciar();
+                    this.disparosEnemigo.splice(i, 1);
+                    this.jugador.vidas--;
                 }
 
         }
@@ -170,6 +172,10 @@ class GameLayer extends Layer {
                 this.disparosEnemigo.push(nuevoDisparo);
             }
         }
+
+        //Comprobamos si el jugador se ha quedado sin vidas
+        if(this.jugador.vidas<=0)
+            this.iniciar();
 
     }
 
