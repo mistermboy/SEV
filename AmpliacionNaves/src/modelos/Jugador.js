@@ -20,7 +20,7 @@ class Jugador extends Modelo {
             this.tiempoDisparo--;
         }
 
-        if(this.x + this.vx > 0 && this.x + this.vx < 480 && this.y + this.vy > 0 && this.y + this.vy < 320){
+        if(this.x + this.vx > 0 && this.x + this.vx < 480 && this.y + this.vy > 70 && this.y + this.vy < 300){
             this.x = this.x + this.vx;
             this.y = this.y + this.vy;
         }
@@ -44,6 +44,7 @@ class Jugador extends Modelo {
             return null;
         }
     }
+
 
 
 }
