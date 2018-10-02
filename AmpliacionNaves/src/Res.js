@@ -10,6 +10,7 @@ var imagenes = {
     bomba : "res/bomba.png",
     moneda : "res/moneda.png",
     vida : "res/corazon.png",
+    municion : "res/municion.png",
 };
 
 var rutasImagenes = Object.values(imagenes);

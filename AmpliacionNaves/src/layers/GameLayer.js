@@ -35,6 +35,8 @@ class GameLayer extends Layer {
 
         this.monedas = [];
 
+        this.cajasMunicion = [];
+
 
 
     }
@@ -51,7 +53,7 @@ class GameLayer extends Layer {
         // iteracionesCrearEnemigos tiene que ser un número
         this.iteracionesCrearEnemigos ++;
 
-        if ( this.iteracionesCrearEnemigos > 40){
+        if ( this.iteracionesCrearEnemigos > 50){
             var rX = Math.random() * (600 - 500) + 500;
             var rY = Math.random() * (300 - 70) + 70;
             this.enemigos.push(new Enemigo(rX,rY));
@@ -78,13 +80,26 @@ class GameLayer extends Layer {
         }
 
         this.iteracionesCrearMonedas ++;
-        if ( this.iteracionesCrearMonedas > 50){
+        if ( this.iteracionesCrearMonedas > 150){
             var rX = Math.random() * (600 - 500) + 500;
             var rY = Math.random() * (300 - 70) + 70;
             this.monedas.push(new Moneda(rX,rY));
             this.iteracionesCrearMonedas = 0;
         }
 
+
+        //Generar Cajas de munición
+        if (this.iteracionesCrearMunicion == null){
+            this.iteracionesCrearMunicion = 0;
+        }
+
+        this.iteracionesCrearMunicion ++;
+        if ( this.iteracionesCrearMunicion > 200){
+            var rX = Math.random() * (600 - 500) + 500;
+            var rY = Math.random() * (300 - 70) + 70;
+            this.cajasMunicion.push(new Municion(rX,rY));
+            this.iteracionesCrearMunicion = 0;
+        }
 
 
         this.jugador.actualizar();
@@ -106,6 +121,10 @@ class GameLayer extends Layer {
 
         for (var i=0; i < this.monedas.length; i++){
             this.monedas[i].actualizar();
+        }
+
+        for (var i=0; i < this.cajasMunicion.length; i++){
+            this.cajasMunicion[i].actualizar();
         }
 
         // Miro Colisiones
@@ -159,6 +178,14 @@ class GameLayer extends Layer {
             }
         }
 
+        //Colisiones jugador - municion
+        for (var i=0; i < this.cajasMunicion.length; i++){
+            if ( this.jugador.colisiona(this.cajasMunicion[i])){
+                this.cajasMunicion.splice(i, 1);
+                this.jugador.numDisparos += 10;
+            }
+        }
+
 
         // Eliminar disparos fuera de pantalla
         for (var i=0; i < this.disparosJugador.length; i++){
@@ -205,6 +232,10 @@ class GameLayer extends Layer {
 
         for (var i=0; i < this.monedas.length; i++){
             this.monedas[i].dibujar();
+        }
+
+        for (var i=0; i < this.cajasMunicion.length; i++){
+            this.cajasMunicion[i].dibujar();
         }
 
         //HUD

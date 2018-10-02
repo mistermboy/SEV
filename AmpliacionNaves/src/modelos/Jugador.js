@@ -6,10 +6,12 @@ class Jugador extends Modelo {
         this.vy = 0; // velocidadY
 
         // Disparo
-        this.cadenciaDisparo = 10;
+        this.cadenciaDisparo = 30;
         this.tiempoDisparo = 0;
 
         this.vidas = 3;
+
+        this.numDisparos = 10;
 
     }
 
@@ -36,8 +38,9 @@ class Jugador extends Modelo {
     }
 
     disparar(){
-        if ( this.tiempoDisparo == 0) {
+        if ( this.tiempoDisparo == 0 && this.numDisparos > 0) {
             // reiniciar Cadencia
+            this.numDisparos--;
             this.tiempoDisparo = this.cadenciaDisparo;
             return new DisparoJugador(this.x, this.y);
         } else {
