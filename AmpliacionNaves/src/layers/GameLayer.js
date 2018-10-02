@@ -8,7 +8,9 @@ class GameLayer extends Layer {
     iniciar() {
 
         this.fondoPuntos =
-            new Fondo(imagenes.icono_puntos, 480*0.85,320*0.05);
+            new Fondo(imagenes.icono_puntos, 480*0.85,320*0.06);
+
+        this.fondoAmmo = new Fondo(imagenes.municion, 480*0.55,320*0.07);
 
         this.fondoPrimeraVida =
             new Fondo(imagenes.vida, 480*0.07,320*0.06);
@@ -19,10 +21,14 @@ class GameLayer extends Layer {
         this.fondoTerceraVida =
             new Fondo(imagenes.vida, 480*0.27,320*0.06);
 
-        this.puntos = new Texto(0,480*0.9,320*0.07 );
+        this.puntos = new Texto(0,480*0.9,320*0.08 );
+
 
         this.jugador = new Jugador(50, 80);
         this.fondo = new Fondo(imagenes.fondo,480*0.5,320*0.5);
+
+        this.ammo = new Texto(0,480*0.6,320*0.08 );
+        this.ammo.valor = this.jugador.numDisparos;
 
         this.enemigos = [];
 
@@ -183,6 +189,7 @@ class GameLayer extends Layer {
             if ( this.jugador.colisiona(this.cajasMunicion[i])){
                 this.cajasMunicion.splice(i, 1);
                 this.jugador.numDisparos += 10;
+                this.ammo.valor+=10;
             }
         }
 
@@ -243,6 +250,9 @@ class GameLayer extends Layer {
         this.fondoPuntos.dibujar();
         this.puntos.dibujar();
 
+        this.fondoAmmo.dibujar();
+        this.ammo.dibujar();
+
         if(this.fondoPrimeraVida != null)
             this.fondoPrimeraVida.dibujar();
         if(this.fondoSegundaVida != null)
@@ -258,6 +268,7 @@ class GameLayer extends Layer {
             var nuevoDisparo = this.jugador.disparar();
             if ( nuevoDisparo != null ) {
                 this.disparosJugador.push(nuevoDisparo);
+                this.ammo.valor--;
             }
         }
 

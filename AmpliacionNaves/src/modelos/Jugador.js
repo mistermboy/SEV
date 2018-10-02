@@ -6,12 +6,12 @@ class Jugador extends Modelo {
         this.vy = 0; // velocidadY
 
         // Disparo
-        this.cadenciaDisparo = 30;
+        this.cadenciaDisparo = 15;
         this.tiempoDisparo = 0;
 
         this.vidas = 3;
 
-        this.numDisparos = 10;
+        this.numDisparos = 15;
 
     }
 
