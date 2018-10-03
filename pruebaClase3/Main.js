@@ -18,24 +18,9 @@ function iniciarJuego() {
 
 function loop(){
     gameLayer.actualizar();
-    if (entrada == entradas.pulsaciones) {
-        gameLayer.calcularPulsaciones(pulsaciones);
-    }
     gameLayer.procesarControles();
     gameLayer.dibujar();
-
-    actualizarPulsaciones();
 }
-
-
-function actualizarPulsaciones () {
-    for(var i=0; i < pulsaciones.length; i++){
-        if ( pulsaciones[i].tipo ==  tipoPulsacion.inicio){
-            pulsaciones[i].tipo = tipoPulsacion.mantener;
-        }
-    }
-}
-
 
 // Cambio de escalado
 window.addEventListener('load', this.resize, false);

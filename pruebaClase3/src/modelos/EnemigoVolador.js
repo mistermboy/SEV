@@ -1,10 +1,10 @@
-class Enemigo extends Modelo {
+class EnemigoVolador extends Modelo {
 
     constructor(x, y) {
         super(imagenes.enemigo, x, y)
         this.estado = estados.moviendo;
-        this.vxInteligencia = -1;
-        this.vx = this.vxInteligencia;
+        this.vyInteligencia = -1;
+        this.vy = this.vyInteligencia;
 
         this.aMover = new Animacion(imagenes.enemigo_movimiento,
             this.ancho, this.alto, 6, 3);
@@ -15,7 +15,7 @@ class Enemigo extends Modelo {
         this.animacion = this.aMover;
 
 
-        this.vy = 0;
+        this.vx = 0;
 
     }
 
@@ -42,20 +42,19 @@ class Enemigo extends Modelo {
         }
 
         if ( this.estado == estados.muriendo) {
-            this.vx = 0;
+            this.vy = 0;
         } else {
-            if ( this.vx == 0){
-                this.vxInteligencia = this.vxInteligencia * -1;
-                this.vx = this.vxInteligencia;
+            if ( this.vy == 0){
+                this.vyInteligencia = this.vxInteligencia * -1;
+                this.vy = this.vxInteligencia;
             }
         }
     }
 
     dibujar (scrollX){
         scrollX = scrollX || 0;
-        this.animacion.dibujar(this.x - scrollX, this.y);
+        this.animacion.dibujar(this.x - scrollX, this.y );
     }
-
 
 
 }
