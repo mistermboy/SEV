@@ -230,11 +230,12 @@ class Espacio {
     }
 
     eliminarCuerpoEstatico(modelo){
-        for (var i = 0; i < this.estaticos.ength; i++) {
+        for (var i = 0; i < this.estaticos.length; i++) {
             if (this.estaticos[i] == modelo) {
                 this.estaticos.splice(i, 1);
             }
         }
     }
+
 
 }
