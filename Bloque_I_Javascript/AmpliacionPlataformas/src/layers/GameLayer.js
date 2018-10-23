@@ -121,6 +121,14 @@ class GameLayer extends Layer {
             }
         }
 
+
+        // colisiones , Jugador - Recolectable
+        for (var i=0; i < this.recolectables.length; i++){
+            if ( this.jugador.colisiona(this.recolectables[i])){
+               this.recolectables.splice(i,1);
+            }
+        }
+
         // Enemigos muertos fuera del juego
         for (var j=0; j < this.enemigos.length; j++){
             if ( this.enemigos[j] != null &&
