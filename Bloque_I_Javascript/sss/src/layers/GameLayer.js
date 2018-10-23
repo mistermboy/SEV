@@ -17,6 +17,7 @@ class GameLayer extends Layer {
 
         this.scrollX = 0;
         this.bloques = [];
+        this.recolectables = [];
         this.fondoPuntos =
             new Fondo(imagenes.icono_puntos, 480*0.85,320*0.05);
 
@@ -28,8 +29,6 @@ class GameLayer extends Layer {
         this.disparosJugador = []
 
         this.enemigos = [];
-
-        this.recolectables = [];
 
         this.cargarMapa("res/"+nivelActual+".txt");
     }
@@ -158,6 +157,11 @@ class GameLayer extends Layer {
         for (var i=0; i < this.bloques.length; i++){
             this.bloques[i].dibujar(this.scrollX);
         }
+
+        for (var i=0; i < this.recolectables.length; i++){
+            this.recolectables[i].dibujar(this.scrollX);
+        }
+
         for (var i=0; i < this.disparosJugador.length; i++) {
             this.disparosJugador[i].dibujar(this.scrollX);
         }
@@ -166,11 +170,6 @@ class GameLayer extends Layer {
         for (var i=0; i < this.enemigos.length; i++){
             this.enemigos[i].dibujar(this.scrollX);
         }
-
-        for (var i=0; i < this.recolectables.length; i++){
-            this.recolectables[i].dibujar();
-        }
-
         this.fondoPuntos.dibujar();
         this.puntos.dibujar();
         if ( !this.pausa && entrada == entradas.pulsaciones) {
@@ -327,12 +326,12 @@ class GameLayer extends Layer {
                 this.bloques.push(bloque);
                 this.espacio.agregarCuerpoEstatico(bloque);
                 break;
+
             case "R":
-                var rec = new Recolectable(imagenes.icono_recolectable, x,y);
-                rec.y = rec.y - rec.alto/2;
-                // modificación para empezar a contar desde el suelo
-                this.recolectables.push(rec);
-                this.espacio.agregarCuerpoDinamico(rec);
+               var recolectable = new Recolectable(imagenes.icono_recolectable, x,y);
+                recolectable.y = recolectable.y - recolectable.alto/2;
+                this.recolectables.push(recolectable);
+                this.espacio.agregarCuerpoDinamico(recolectable);
                 break;
         }
     }
