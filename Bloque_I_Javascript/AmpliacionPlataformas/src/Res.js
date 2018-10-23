@@ -13,6 +13,7 @@ var imagenes = {
     icono_puntos : "res/icono_puntos.png",
     icono_vidas : "res/icono_vidas.png",
     icono_recolectable : "res/icono_recolectable.png",
+    recolectable : "res/recolectable.png",
     fondo_2 : "res/fondo_2.png",
     jugador_idle_derecha : "res/jugador_idle_derecha.png",
     jugador_idle_izquierda : "res/jugador_idle_izquierda.png",
