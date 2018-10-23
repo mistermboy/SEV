@@ -22,6 +22,11 @@ class GameLayer extends Layer {
 
         this.puntos = new Texto(0,480*0.9,320*0.07 );
 
+        this.fondoRecolectables =
+            new Fondo(imagenes.icono_recolectable, 480*0.73,320*0.07);
+
+        this.puntosRecolectables = new Texto(0,480*0.79,320*0.07 );
+
         this.jugador = new Jugador(50, 50);
         this.fondo = new Fondo(imagenes.fondo_2,480*0.5,320*0.5);
 
@@ -126,6 +131,7 @@ class GameLayer extends Layer {
         for (var i=0; i < this.recolectables.length; i++){
             if ( this.jugador.colisiona(this.recolectables[i])){
                this.recolectables.splice(i,1);
+               this.puntosRecolectables.valor++;
             }
         }
 
@@ -176,11 +182,15 @@ class GameLayer extends Layer {
         }
 
         for (var i=0; i < this.recolectables.length; i++){
-            this.recolectables[i].dibujar();
+            this.recolectables[i].dibujar(this.scrollX);
         }
 
         this.fondoPuntos.dibujar();
         this.puntos.dibujar();
+
+        this.fondoRecolectables.dibujar();
+        this.puntosRecolectables.dibujar();
+
         if ( !this.pausa && entrada == entradas.pulsaciones) {
             this.botonDisparo.dibujar();
             this.botonSalto.dibujar();
