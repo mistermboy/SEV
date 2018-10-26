@@ -4,6 +4,7 @@ class GameLayer extends Layer {
         super();
         this.mensaje = new Boton(imagenes.mensaje_como_jugar, 480/2, 320/2);
         this.pausa = true;
+        this.salvar = false;
         this.iniciar();
     }
 
@@ -28,6 +29,7 @@ class GameLayer extends Layer {
         this.puntosRecolectables = new Texto(0,480*0.79,320*0.07 );
 
         this.jugador = new Jugador(50, 50);
+
         this.fondo = new Fondo(imagenes.fondo_2,480*0.5,320*0.5);
 
         this.disparosJugador = []
@@ -37,6 +39,9 @@ class GameLayer extends Layer {
         this.recolectables = [];
 
         this.cargarMapa("res/"+nivelActual+".txt");
+
+        if(this.salvar)
+            this.jugador.x=this.checkPoint.x;
     }
 
     actualizar (){
@@ -53,6 +58,13 @@ class GameLayer extends Layer {
             this.mensaje =
                 new Boton(imagenes.mensaje_ganar, 480/2, 320/2);
             this.iniciar();
+        }
+
+
+        //  Jugador - CheckPoint
+        if ( this.checkPoint.colisiona(this.jugador)){
+            this.checkPoint.imagen.src = imagenes.checkPassed;
+            this.salvar = true;
         }
 
         // Jugador se cae
@@ -126,14 +138,14 @@ class GameLayer extends Layer {
             }
         }
 
-
-        // colisiones , Jugador - Recolectable
-        for (var i=0; i < this.recolectables.length; i++){
-            if ( this.jugador.colisiona(this.recolectables[i])){
-               this.recolectables.splice(i,1);
-               this.puntosRecolectables.valor++;
+        // colision , Jugador - Recolectable
+        for (var i=0; i < this.recolectables.length; i++) {
+            if (this.jugador.colisiona(this.recolectables[i])) {
+                this.recolectables.splice(i, 1);
+                this.puntosRecolectables.valor++;
             }
         }
+
 
         // Enemigos muertos fuera del juego
         for (var j=0; j < this.enemigos.length; j++){
@@ -167,6 +179,7 @@ class GameLayer extends Layer {
     }
 
     dibujar (){
+
         this.calcularScroll();
         this.fondo.dibujar();
         for (var i=0; i < this.bloques.length; i++){
@@ -176,6 +189,8 @@ class GameLayer extends Layer {
             this.disparosJugador[i].dibujar(this.scrollX);
         }
         this.copa.dibujar(this.scrollX);
+        this.checkPoint.dibujar(this.scrollX);
+
         this.jugador.dibujar(this.scrollX);
         for (var i=0; i < this.enemigos.length; i++){
             this.enemigos[i].dibujar(this.scrollX);
@@ -324,6 +339,11 @@ class GameLayer extends Layer {
                 this.copa.y = this.copa.y - this.copa.alto/2;
                 // modificación para empezar a contar desde el suelo
                 this.espacio.agregarCuerpoDinamico(this.copa);
+                break;
+            case "A":
+                this.checkPoint = new Bloque(imagenes.check, x,y);
+                this.checkPoint.y = this.checkPoint.y - this.checkPoint.alto/2;
+                this.espacio.agregarCuerpoDinamico(this.checkPoint);
                 break;
             case "E":
                 var enemigo = new Enemigo(x,y);

@@ -38,6 +38,8 @@ var imagenes = {
     mensaje_como_jugar : "res/mensaje_como_jugar.png",
     mensaje_ganar : "res/mensaje_ganar.png",
     mensaje_perder : "res/mensaje_perder.png",
+    check : "res/checkpoint.png",
+    checkPassed : "res/checkpass.png",
 };
 
 var rutasImagenes = Object.values(imagenes);
