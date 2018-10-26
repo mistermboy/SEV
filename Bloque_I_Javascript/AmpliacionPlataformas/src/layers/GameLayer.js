@@ -38,6 +38,8 @@ class GameLayer extends Layer {
 
         this.recolectables = [];
 
+        this.enemigosEspeciales = [];
+
         this.cargarMapa("res/"+nivelActual+".txt");
 
         if(this.salvar)
@@ -57,6 +59,7 @@ class GameLayer extends Layer {
             this.pausa = true;
             this.mensaje =
                 new Boton(imagenes.mensaje_ganar, 480/2, 320/2);
+            this.salvar = false;
             this.iniciar();
         }
 
@@ -103,6 +106,10 @@ class GameLayer extends Layer {
             this.enemigos[i].actualizar();
         }
 
+        for (var i=0; i < this.enemigosEspeciales.length; i++){
+            this.enemigosEspeciales[i].actualizar();
+        }
+
         for (var i=0; i < this.recolectables.length; i++){
             this.recolectables[i].actualizar();
         }
@@ -120,6 +127,25 @@ class GameLayer extends Layer {
                 }
             }
         }
+
+
+        // colisiones especiales
+        for (var i=0; i < this.enemigosEspeciales.length; i++){
+            if ( this.jugador.colisionaEncima(this.enemigosEspeciales[i])){
+                this.enemigosEspeciales[i].impactado();
+                this.puntos.valor++;
+            }
+/*
+            if ( this.jugador.colisionaNormal(this.enemigos[i])){
+                this.jugador.golpeado();
+                if (this.jugador.vidas <= 0){
+                    this.iniciar();
+                }
+            }
+            */
+
+        }
+
         // colisiones , disparoJugador - Enemigo
         for (var i=0; i < this.disparosJugador.length; i++){
             for (var j=0; j < this.enemigos.length; j++){
@@ -148,6 +174,7 @@ class GameLayer extends Layer {
 
 
         // Enemigos muertos fuera del juego
+
         for (var j=0; j < this.enemigos.length; j++){
             if ( this.enemigos[j] != null &&
                 this.enemigos[j].estado == estados.muerto  ) {
@@ -155,6 +182,17 @@ class GameLayer extends Layer {
                 this.espacio
                     .eliminarCuerpoDinamico(this.enemigos[j]);
                 this.enemigos.splice(j, 1);
+
+            }
+        }
+
+        for (var j=0; j < this.enemigosEspeciales.length; j++){
+            if ( this.enemigosEspeciales[j] != null &&
+                this.enemigosEspeciales[j].estado == estados.muerto  ) {
+
+                this.espacio
+                    .eliminarCuerpoDinamico(this.enemigosEspeciales[j]);
+                this.enemigosEspeciales.splice(j, 1);
 
             }
         }
@@ -194,6 +232,10 @@ class GameLayer extends Layer {
         this.jugador.dibujar(this.scrollX);
         for (var i=0; i < this.enemigos.length; i++){
             this.enemigos[i].dibujar(this.scrollX);
+        }
+
+        for (var i=0; i < this.enemigosEspeciales.length; i++){
+            this.enemigosEspeciales[i].dibujar();
         }
 
         for (var i=0; i < this.recolectables.length; i++){
@@ -350,6 +392,13 @@ class GameLayer extends Layer {
                 enemigo.y = enemigo.y - enemigo.alto/2;
                 // modificación para empezar a contar desde el suelo
                 this.enemigos.push(enemigo);
+                this.espacio.agregarCuerpoDinamico(enemigo);
+                break;
+            case "S":
+                var enemigo = new Enemigo(x,y);
+                enemigo.y = enemigo.y - enemigo.alto/2;
+                // modificación para empezar a contar desde el suelo
+                this.enemigosEspeciales.push(enemigo);
                 this.espacio.agregarCuerpoDinamico(enemigo);
                 break;
             case "1":
