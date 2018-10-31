@@ -5,7 +5,7 @@
  </tileset>
  <layer name="Fondo" width="500" height="20">
   <data encoding="base64" compression="zlib">
-   eJztw8EJAAAMA6H7Z/99C51DwVVTVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/Af00rcA=
+   eJztwwEJAAAMBKHL9P3DDZZDwVVTVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVX/AbIioYo=
   </data>
  </layer>
  <layer name="Patrones terreno" width="500" height="20">

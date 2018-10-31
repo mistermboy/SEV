@@ -51,7 +51,7 @@ var GameLayer = cc.Layer.extend({
 
             // Caída, sí cae vuelve a la posición inicial
                   if( this.jugador.body.p.y < -100){
-                     this.jugador.body.p = cc.p(50,150);
+                     this.jugador.body.p = cc.p(50,300);
                   }
 
 
