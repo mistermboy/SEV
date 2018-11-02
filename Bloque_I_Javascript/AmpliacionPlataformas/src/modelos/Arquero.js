@@ -3,7 +3,7 @@ class Arquero extends Modelo {
     constructor(x, y) {
         super(imagenes.arquero, x, y)
 
-        this.vxInteligencia = -1;
+        this.vxInteligencia = -3;
         this.vx = this.vxInteligencia;
 
         this.estado = estados.moviendo;
