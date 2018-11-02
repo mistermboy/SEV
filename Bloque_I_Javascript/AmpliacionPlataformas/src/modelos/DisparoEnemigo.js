@@ -1,8 +1,9 @@
 class DisparoEnemigo extends Modelo {
 
-    constructor(x, y) {
-        super(imagenes.flecha, x, y)
-        this.vx = -5;
+    constructor(imagen,x, y) {
+        super(imagen, x, y)
+        this.vx = 5;
+        this.orientacion = orientaciones.derecha;
     }
 
     actualizar (){

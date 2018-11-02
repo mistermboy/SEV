@@ -11,20 +11,20 @@ class Arquero extends Modelo {
 
 
         this.aDispararDerecha = new Animacion(imagenes.arquero_animacion_ataque_dcha,
-            this.ancho, this.alto, 6, 2, this.finAnimacionDisparar.bind(this) );
+            this.ancho, this.alto, 1, 2, this.finAnimacionDisparar.bind(this) );
 
         this.aDispararIzquierda = new Animacion(imagenes.arquero_animacion_ataque_izda,
-            this.ancho, this.alto, 6, 2, this.finAnimacionDisparar.bind(this));
+            this.ancho, this.alto, 1, 2, this.finAnimacionDisparar.bind(this));
 
         this.aIdleDerecha = new Animacion(imagenes.arquero_dcha,
-            this.ancho, this.alto, 6, 1);
+            this.ancho, this.alto, 4, 1);
         this.aIdleIzquierda = new Animacion(imagenes.arquero_izda,
-            this.ancho, this.alto, 6, 1);
+            this.ancho, this.alto, 4, 1);
         this.aCorriendoDerecha =
             new Animacion(imagenes.arquero_animacion_dcha,
-                this.ancho, this.alto, 8,2);
+                this.ancho, this.alto, 4,2);
         this.aCorriendoIzquierda = new Animacion(imagenes.arquero_animacion_izda,
-            this.ancho, this.alto, 8, 2, null);
+            this.ancho, this.alto, 4, 2, null);
 
 
         this.aMorir = new Animacion(imagenes.arquero_animacion_muerte,
@@ -147,7 +147,18 @@ class Arquero extends Modelo {
         if ( this.tiempoDisparoEnemigo == 0) {
             // reiniciar Cadencia
             this.tiempoDisparoEnemigo = this.cadenciaDisparoEnemigo;
-            return new DisparoEnemigo(this.x, this.y);
+            this.estado = estados.disparando;
+            var disparo;
+            if(this.orientacion == orientaciones.izquierda) {
+                disparo = new DisparoEnemigo(imagenes.flecha_izda, this.x, this.y);
+                disparo.vx = disparo.vx * -1;
+                disparo.orientacion = orientaciones.izquierda;
+            }else {
+                disparo = new DisparoEnemigo(imagenes.flecha_dcha, this.x, this.y);
+                disparo.orientacion = orientaciones.derecha;
+            }
+
+            return disparo;
         } else {
             return null;
         }

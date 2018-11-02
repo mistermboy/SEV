@@ -48,7 +48,8 @@ var imagenes = {
     arquero_animacion_ataque_izda : "res/animacion_arquero_ataque_izquierda.png",
     arquero_animacion_ataque_dcha : "res/animacion_arquero_ataque_derecha.png",
     arquero_animacion_muerte : "res/animacion_arquero_muerte.png",
-    flecha : "res/Flecha.png",
+    flecha_dcha : "res/flecha_dcha.png",
+    flecha_izda : "res/flecha_izda.png",
 
 };
 
