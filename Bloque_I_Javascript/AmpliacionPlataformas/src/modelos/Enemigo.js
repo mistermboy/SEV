@@ -10,7 +10,7 @@ class Enemigo extends Modelo {
             this.ancho, this.alto, 6, 3);
 
         this.aMorir = new Animacion(imagenes.enemigo_morir,
-            this.ancho, this.alto, 6, 8, this.finAnimacionMorir.bind(this));
+            this.ancho, this.alto, 1, 8, this.finAnimacionMorir.bind(this));
         // Ref a la animación actual
         this.animacion = this.aMover;
 

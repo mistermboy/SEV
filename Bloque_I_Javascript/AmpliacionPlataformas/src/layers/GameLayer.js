@@ -32,7 +32,9 @@ class GameLayer extends Layer {
 
         this.fondo = new Fondo(imagenes.fondo_2,480*0.5,320*0.5);
 
-        this.disparosJugador = []
+        this.disparosJugador = [];
+
+        this.disparosEnemigo = [];
 
         this.enemigos = [];
 
@@ -102,6 +104,10 @@ class GameLayer extends Layer {
             }
         }
 
+        for (var i=0; i < this.disparosEnemigo.length; i++) {
+            this.disparosEnemigo[i].actualizar();
+        }
+
         for (var i=0; i < this.enemigos.length; i++){
             this.enemigos[i].actualizar();
         }
@@ -131,9 +137,15 @@ class GameLayer extends Layer {
 
         // colisiones especiales
         for (var i=0; i < this.enemigosEspeciales.length; i++){
-            if ( this.jugador.colisionaEncima(this.enemigosEspeciales[i])){
-                this.enemigosEspeciales[i].impactado();
-                this.puntos.valor++;
+            if ( this.jugador.colisiona(this.enemigosEspeciales[i])){
+
+                if(this.jugador.colisionaEncima(this.enemigosEspeciales[i]) && this.jugador.vy > 0){
+                    this.enemigosEspeciales[i].impactado();
+                    this.puntos.valor++;
+                }
+
+
+
             }
 /*
             if ( this.jugador.colisionaNormal(this.enemigos[i])){
@@ -186,9 +198,9 @@ class GameLayer extends Layer {
             }
         }
 
-        for (var j=0; j < this.enemigosEspeciales.length; j++){
-            if ( this.enemigosEspeciales[j] != null &&
-                this.enemigosEspeciales[j].estado == estados.muerto  ) {
+        for (var j=0; j < this.enemigosEspeciales.length; j++) {
+            if (this.enemigosEspeciales[j] != null &&
+                this.enemigosEspeciales[j].estado == estados.muerto) {
 
                 this.espacio
                     .eliminarCuerpoDinamico(this.enemigosEspeciales[j]);
@@ -196,6 +208,17 @@ class GameLayer extends Layer {
 
             }
         }
+
+
+            // Generamos disparos para los enemigos
+            for (var i=0; i < this.enemigosEspeciales.length; i++){
+
+                var nuevoDisparo = this.enemigosEspeciales[i].disparar();
+                if ( nuevoDisparo != null && this.enemigosEspeciales[i].estaEnPantalla()) {
+                    this.disparosEnemigo.push(nuevoDisparo);
+                }
+            }
+
 
     }
 
@@ -240,6 +263,10 @@ class GameLayer extends Layer {
 
         for (var i=0; i < this.recolectables.length; i++){
             this.recolectables[i].dibujar(this.scrollX);
+        }
+
+        for (var i=0; i < this.disparosEnemigo.length; i++) {
+            this.disparosEnemigo[i].dibujar();
         }
 
         this.fondoPuntos.dibujar();
@@ -395,7 +422,7 @@ class GameLayer extends Layer {
                 this.espacio.agregarCuerpoDinamico(enemigo);
                 break;
             case "S":
-                var enemigo = new Enemigo(x,y);
+                var enemigo = new Arquero(x,y);
                 enemigo.y = enemigo.y - enemigo.alto/2;
                 // modificación para empezar a contar desde el suelo
                 this.enemigosEspeciales.push(enemigo);

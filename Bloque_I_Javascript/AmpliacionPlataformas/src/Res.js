@@ -40,6 +40,16 @@ var imagenes = {
     mensaje_perder : "res/mensaje_perder.png",
     check : "res/checkpoint.png",
     checkPassed : "res/checkpass.png",
+    arquero : "res/arquero.png",
+    arquero_dcha : "res/arquero_derecha_2.png",
+    arquero_izda : "res/arquero_izquierda_2.png",
+    arquero_animacion_izda : "res/animacion_arquero_izquierda.png",
+    arquero_animacion_dcha : "res/animacion_arquero_derecha.png",
+    arquero_animacion_ataque_izda : "res/animacion_arquero_ataque_izquierda.png",
+    arquero_animacion_ataque_dcha : "res/animacion_arquero_ataque_derecha.png",
+    arquero_animacion_muerte : "res/animacion_arquero_muerte.png",
+    flecha : "res/Flecha.png",
+
 };
 
 var rutasImagenes = Object.values(imagenes);
