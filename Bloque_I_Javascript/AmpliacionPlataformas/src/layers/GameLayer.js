@@ -120,9 +120,9 @@ class GameLayer extends Layer {
             console.log(this.disparosEnemigo[i].vx);
             if ( this.disparosEnemigo[i] != null){
                 var eliminar = false;
-                if( this.disparosEnemigo[i].orientacion == orientaciones.izquierda && this.disparosEnemigo[i].vx >= -4.5)
+                if( this.disparosEnemigo[i].orientacion == orientaciones.izquierda && this.disparosEnemigo[i].vx >= -3.5)
                     eliminar = true;
-                if( this.disparosEnemigo[i].orientacion == orientaciones.derecha && this.disparosEnemigo[i].vx <= 4.5)
+                if( this.disparosEnemigo[i].orientacion == orientaciones.derecha && this.disparosEnemigo[i].vx <= 3.5)
                     eliminar = true;
                 if(eliminar){
                     this.espacio
