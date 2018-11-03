@@ -44,10 +44,17 @@ class GameLayer extends Layer {
 
         this.boxes = [];
 
-        this.cargarMapa("res/"+nivelActual+".txt");
+        this.delayTile = 0;
+        this.contacto = false;
 
-        if(this.salvar)
-            this.jugador.x=this.checkPoint.x;
+        this.cargarMapa("res/"+nivelActual+".txt");
+        this.checkPoint.imagen.src = imagenes.check;
+
+        if(this.salvar) {
+            this.jugador.x = this.checkPoint.x;
+            this.checkPoint.imagen.src = imagenes.checkPassed;
+        }
+
     }
 
     actualizar (){
@@ -167,12 +174,15 @@ class GameLayer extends Layer {
         for (var i=0; i < this.enemigosEspeciales.length; i++){
             if ( this.jugador.colisiona(this.enemigosEspeciales[i])){
 
-                if(this.jugador.colisionaEncima(this.enemigosEspeciales[i]) && this.jugador.vy > 0 && this.enemigosEspeciales[i].estado != estados.muriendo && this.enemigosEspeciales[i].estado != estados.muerto){
+                if(this.jugador.colisionaEncima(this.enemigosEspeciales[i])
+                    && this.jugador.vy > 0 && this.enemigosEspeciales[i].estado != estados.muriendo
+                    && this.enemigosEspeciales[i].estado != estados.muerto){
                     this.enemigosEspeciales[i].impactado();
                     this.puntos.valor++;
                 }else{
 
-                    if(this.enemigosEspeciales[i].estado != estados.muriendo && this.enemigosEspeciales[i].estado != estados.muerto)
+                    if(this.enemigosEspeciales[i].estado != estados.muriendo
+                        && this.enemigosEspeciales[i].estado != estados.muerto)
                         this.jugador.golpeado();
                         if (this.jugador.vidas <= 0){
                             this.iniciar();
@@ -182,7 +192,7 @@ class GameLayer extends Layer {
 
         }
 
-        // colisiones , disparoJugador - Enemigo
+        // colisiones , disparoJugador - Alien
         for (var i=0; i < this.disparosJugador.length; i++){
             for (var j=0; j < this.enemigos.length; j++){
 
@@ -245,11 +255,14 @@ class GameLayer extends Layer {
         for (var i=0; i < this.boxes.length; i++) {
             if (this.jugador.colisiona(this.boxes[i])) {
                 if(this.jugador.colisionaEncima(this.boxes[i]) && this.jugador.vy > 0){
-                    this.espacio.eliminarCuerpoEstatico(this.boxes[i]);
-                    this.boxes.splice(i, 1);
+                    this.actualTile = i;
+                    this.contacto = true;
                 }
             }
         }
+
+        if(this.contacto)
+            this.contactoTile();
 
 
         // Enemigos muertos fuera del juego
@@ -487,7 +500,7 @@ class GameLayer extends Layer {
                 this.espacio.agregarCuerpoDinamico(this.checkPoint);
                 break;
             case "E":
-                var enemigo = new Enemigo(x,y);
+                var enemigo = new Alien(x,y);
                 enemigo.y = enemigo.y - enemigo.alto/2;
                 // modificación para empezar a contar desde el suelo
                 this.enemigos.push(enemigo);
@@ -520,7 +533,7 @@ class GameLayer extends Layer {
                 this.recolectables.push(rec);
                 this.espacio.agregarCuerpoDinamico(rec);
                 break;
-            case "B":
+            case "W":
                 var box = new Tile(imagenes.box_icon, x,y,imagenes.box,1,4);
                 box.y = box.y - box.alto/2;
                 // modificación para empezar a contar desde el suelo
@@ -529,6 +542,16 @@ class GameLayer extends Layer {
                 break;
 
         }
+    }
+
+    contactoTile(){
+        if(this.delayTile == 30) {
+            this.espacio.eliminarCuerpoEstatico(this.boxes[this.actualTile]);
+            this.boxes.splice(this.actualTile, 1);
+            this.delayTile = 0;
+        }else
+            this.delayTile++;
+
     }
 
 }
