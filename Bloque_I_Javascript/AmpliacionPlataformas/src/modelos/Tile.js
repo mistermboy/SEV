@@ -1,10 +1,10 @@
-class Recolectable extends Modelo {
+class Tile extends Modelo {
 
-    constructor(rutaImagen, x, y) {
+    constructor(rutaImagen, x, y,animacion, velocidadRefresco, framesTotales) {
         super(rutaImagen, x, y)
 
-        this.animacion = new Animacion(imagenes.recolectable,
-            this.ancho, this.alto, 1, 8);
+        this.animacion = new Animacion(animacion,
+            this.ancho, this.alto,  velocidadRefresco, framesTotales);
     }
 
 

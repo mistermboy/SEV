@@ -42,6 +42,8 @@ class GameLayer extends Layer {
 
         this.enemigosEspeciales = [];
 
+        this.boxes = [];
+
         this.cargarMapa("res/"+nivelActual+".txt");
 
         if(this.salvar)
@@ -115,23 +117,15 @@ class GameLayer extends Layer {
             }
         }
 
-        // Eliminar disparos enemigos sin velocidad
+        // Eliminar disparos que chocan
         for (var i=0; i < this.disparosEnemigo.length; i++){
-            console.log(this.disparosEnemigo[i].vx);
-            if ( this.disparosEnemigo[i] != null){
-                var eliminar = false;
-                if( this.disparosEnemigo[i].orientacion == orientaciones.izquierda && this.disparosEnemigo[i].vx >= -3.5)
-                    eliminar = true;
-                if( this.disparosEnemigo[i].orientacion == orientaciones.derecha && this.disparosEnemigo[i].vx <= 3.5)
-                    eliminar = true;
-                if(eliminar){
+            for (var j=0; j < this.bloques.length; j++) {
+                if (this.disparosEnemigo[i].colisiona(this.bloques[j])) {
                     this.espacio
                         .eliminarCuerpoDinamico(this.disparosEnemigo[i]);
                     this.disparosEnemigo.splice(i, 1);
                 }
-
             }
-
         }
 
         for (var i=0; i < this.disparosEnemigo.length; i++) {
@@ -148,6 +142,10 @@ class GameLayer extends Layer {
 
         for (var i=0; i < this.recolectables.length; i++){
             this.recolectables[i].actualizar();
+        }
+
+        for (var i=0; i < this.boxes.length; i++){
+            this.boxes[i].actualizar();
         }
 
         for (var i=0; i < this.disparosJugador.length; i++) {
@@ -202,6 +200,23 @@ class GameLayer extends Layer {
             }
         }
 
+        // colisiones , disparoJugador - EnemigoEspecial
+        for (var i=0; i < this.disparosJugador.length; i++){
+            for (var j=0; j < this.enemigosEspeciales.length; j++){
+
+                if (this.disparosJugador[i] != null &&
+                    this.enemigosEspeciales[j] != null &&
+                    this.disparosJugador[i].colisiona(this.enemigosEspeciales[j])) {
+
+                    this.espacio
+                        .eliminarCuerpoDinamico(this.disparosJugador[i]);
+                    this.disparosJugador.splice(i, 1);
+
+                }
+            }
+        }
+
+
         // colisiones , disparoEnemigo - Jugador
         for (var i=0; i < this.disparosEnemigo.length; i++){
                 if (this.disparosEnemigo[i] != null &&
@@ -223,6 +238,16 @@ class GameLayer extends Layer {
             if (this.jugador.colisiona(this.recolectables[i])) {
                 this.recolectables.splice(i, 1);
                 this.puntosRecolectables.valor++;
+            }
+        }
+
+        // colision , Jugador - Tile
+        for (var i=0; i < this.boxes.length; i++) {
+            if (this.jugador.colisiona(this.boxes[i])) {
+                if(this.jugador.colisionaEncima(this.boxes[i]) && this.jugador.vy > 0){
+                    this.espacio.eliminarCuerpoEstatico(this.boxes[i]);
+                    this.boxes.splice(i, 1);
+                }
             }
         }
 
@@ -306,6 +331,10 @@ class GameLayer extends Layer {
 
         for (var i=0; i < this.recolectables.length; i++){
             this.recolectables[i].dibujar(this.scrollX);
+        }
+
+        for (var i=0; i < this.boxes.length; i++){
+            this.boxes[i].dibujar(this.scrollX);
         }
 
         for (var i=0; i < this.disparosEnemigo.length; i++) {
@@ -485,12 +514,20 @@ class GameLayer extends Layer {
                 this.espacio.agregarCuerpoEstatico(bloque);
                 break;
             case "R":
-                var rec = new Recolectable(imagenes.icono_recolectable, x,y);
+                var rec = new Tile(imagenes.icono_recolectable, x,y,imagenes.recolectable,1,8);
                 rec.y = rec.y - rec.alto/2;
                 // modificación para empezar a contar desde el suelo
                 this.recolectables.push(rec);
                 this.espacio.agregarCuerpoDinamico(rec);
                 break;
+            case "B":
+                var box = new Tile(imagenes.box_icon, x,y,imagenes.box,1,4);
+                box.y = box.y - box.alto/2;
+                // modificación para empezar a contar desde el suelo
+                this.boxes.push(box);
+                this.espacio.agregarCuerpoEstatico(box);
+                break;
+
         }
     }
 

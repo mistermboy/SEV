@@ -50,6 +50,8 @@ var imagenes = {
     arquero_animacion_muerte : "res/animacion_arquero_muerte.png",
     flecha_dcha : "res/flecha_dcha.png",
     flecha_izda : "res/flecha_izda.png",
+    box : "res/box.png",
+    box_icon : "res/box_icon.png",
 
 };
 

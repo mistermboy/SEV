@@ -2,7 +2,7 @@ class DisparoEnemigo extends Modelo {
 
     constructor(imagen,x, y) {
         super(imagen, x, y)
-        this.vx = 4;
+        this.vx = 6;
         this.orientacion = orientaciones.derecha;
     }
 
