@@ -2,6 +2,7 @@
 var tipoMuro = 2;
 var tipoBloque = 3;
 
+
 var GameLayer = cc.Layer.extend({
 
     space:null,
@@ -11,6 +12,7 @@ var GameLayer = cc.Layer.extend({
     arrayBloques:[],
     spriteFondo: null,
     spritePelota:null,
+    intentos:3,
     ctor:function () {
         this._super();
         var size = cc.winSize;
@@ -55,6 +57,9 @@ var GameLayer = cc.Layer.extend({
             null, null, this.collisionBloqueConMuro.bind(this), null);
 
 
+        this.space.addCollisionHandler(tipoMuro, tipoBloque,
+            null, null, this.collisionBloqueConMuro.bind(this), null);
+
         // Fondo
         this.spriteFondo = cc.Sprite.create(res.fondo_png);
         this.spriteFondo.setPosition(cc.p(size.width/2 , size.height/2));
@@ -78,10 +83,9 @@ var GameLayer = cc.Layer.extend({
 
         var shape = new cp.CircleShape(body, this.spritePelota.width/2, cp.vzero);
 
+
         this.space.addShape(shape);
-
         this.addChild(this.spritePelota);
-
 
 
         this.spritePelota.setBody(body);
@@ -147,16 +151,15 @@ var GameLayer = cc.Layer.extend({
         }
         this.formasEliminar = [];
 
-        if( this.arrayBloques.length == 0){
-            // Ganaste no quedan bloques
+        if( this.arrayBloques.length > 0){
+
+
+        } else {
             cc.director.pause();
             cc.audioEngine.stopMusic();
             this.getParent().addChild(new GameOverLayer());
-
-        } else {
-            // ¿Has perdido, o aun no has tirado?
-
         }
+
 
 
     },
@@ -208,7 +211,7 @@ var GameLayer = cc.Layer.extend({
         var shapes = arbiter.getShapes();
         // shapes[0] es el muro
         this.formasEliminar.push(shapes[1]);
-    }
+    },
 
 });
 
