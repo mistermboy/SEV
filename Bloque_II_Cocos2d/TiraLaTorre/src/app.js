@@ -121,6 +121,8 @@ var GameLayer = cc.Layer.extend({
 
     },update:function (dt) {
 
+
+        console.log("TIEMPOTIROO " +this.tiempoTiro);
         if ( this.tiempoTiro != 0){
             this.tiempoTiro++;
         }
@@ -152,6 +154,39 @@ var GameLayer = cc.Layer.extend({
         this.formasEliminar = [];
 
         if( this.arrayBloques.length > 0){
+            var quietos = true;
+            for(var i = 0; i < this.arrayBloques.length; i++) {
+                var vel = this.arrayBloques[i].body.getVel();
+                if( vel.x < -0.09 && vel.x > 0.09 ){
+                    quietos = false;
+                }
+            }
+            if ( this.tiempoTiro > 300 &&
+                quietos && this.intentos>1){
+                this.tiempoTiro=0;
+                this.mundoActivo=false;
+                this.intentos--;
+                //Devolver pelota a posición inicial
+                var size = cc.winSize;
+                var body = new cp.Body(1,
+                    cp.momentForCircle(1, 0, this.spritePelota.width/2, cp.vzero));
+                body.p = cc.p(size.width*0.1 , size.height*0.5);
+                this.removeChild(this.spritePelota);
+                this.spritePelota.setBody(body);
+                this.space.addBody(body);
+                var shape =
+                    new cp.CircleShape(body, this.spritePelota.width/2, cp.vzero);
+
+                this.space.addShape(shape);
+
+                this.addChild(this.spritePelota);
+            }
+            else if ( this.tiempoTiro > 300 &&
+                quietos && this.intentos<=1){
+                cc.director.pause();
+                cc.audioEngine.stopMusic();
+                this.getParent().addChild(new GameOverLayer());
+            }
 
 
         } else {
