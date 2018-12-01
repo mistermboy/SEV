@@ -8,6 +8,7 @@ var GameLayer = cc.Layer.extend({
         spriteBarra: null,
         spriteBloque: null,
         arrayBloques: [],
+        numBloques: 10,
         ctor: function () {
             this._super();
             cc.director.resume();
@@ -124,6 +125,17 @@ var GameLayer = cc.Layer.extend({
 
         update: function (dt) {
 
+
+            // Si se acaban los bloques cambiamos de nivel aumentando en 10 el número de bloques
+            if (this.arrayBloques.length == 0){
+                this.numBloques +=10;
+                console.log("NUMBLOQUEEEEES"+this.numBloques);
+                this.ctor();
+            }
+
+
+
+
             this.procesarControles();
 
             // Mover barra
@@ -151,8 +163,9 @@ var GameLayer = cc.Layer.extend({
             }
             if (this.spritePelota.y < 0 + mitadAlto) {
                 // No rebota, se acaba el juego
-                cc.director.pause();
-                this.getParent().addChild(new GameOverLayer());
+           //     cc.director.pause();
+              //  this.getParent().addChild(new GameOverLayer());
+                this.ctor();
             }
             if (this.spritePelota.y > cc.winSize.height - mitadAlto) {
                 this.spritePelota.y = cc.winSize.height - mitadAlto;
@@ -189,48 +202,17 @@ var GameLayer = cc.Layer.extend({
 
         },
 
-        inicializarBloques: function () {
+        inicializarBloques: function (numBloques) {
             var insertados = 0;
             var fila = 0;
             var columna = 0;
 
-            var framesCocdrilo = [];
-            framesCocdrilo.push(cc.spriteFrameCache.getSpriteFrame("cocodrilo1.png"));
-            framesCocdrilo.push(cc.spriteFrameCache.getSpriteFrame("cocodrilo2.png"));
-            framesCocdrilo.push(cc.spriteFrameCache.getSpriteFrame("cocodrilo3.png"));
-            framesCocdrilo.push(cc.spriteFrameCache.getSpriteFrame("cocodrilo4.png"));
-            framesCocdrilo.push(cc.spriteFrameCache.getSpriteFrame("cocodrilo5.png"));
-            framesCocdrilo.push(cc.spriteFrameCache.getSpriteFrame("cocodrilo6.png"));
-            framesCocdrilo.push(cc.spriteFrameCache.getSpriteFrame("cocodrilo7.png"));
-            framesCocdrilo.push(cc.spriteFrameCache.getSpriteFrame("cocodrilo8.png"));
 
-            var framesPanda = [];
-            framesPanda.push(cc.spriteFrameCache.getSpriteFrame("panda1.png"));
-            framesPanda.push(cc.spriteFrameCache.getSpriteFrame("panda2.png"));
-            framesPanda.push(cc.spriteFrameCache.getSpriteFrame("panda3.png"));
-            framesPanda.push(cc.spriteFrameCache.getSpriteFrame("panda4.png"));
-            framesPanda.push(cc.spriteFrameCache.getSpriteFrame("panda5.png"));
-            framesPanda.push(cc.spriteFrameCache.getSpriteFrame("panda6.png"));
-            framesPanda.push(cc.spriteFrameCache.getSpriteFrame("panda7.png"));
-            framesPanda.push(cc.spriteFrameCache.getSpriteFrame("panda8.png"));
-
-            var framesTigre = [];
-            framesTigre.push(cc.spriteFrameCache.getSpriteFrame("tigre1.png"));
-            framesTigre.push(cc.spriteFrameCache.getSpriteFrame("tigre2.png"));
-            framesTigre.push(cc.spriteFrameCache.getSpriteFrame("tigre3.png"));
-            framesTigre.push(cc.spriteFrameCache.getSpriteFrame("tigre4.png"));
-            framesTigre.push(cc.spriteFrameCache.getSpriteFrame("tigre5.png"));
-            framesTigre.push(cc.spriteFrameCache.getSpriteFrame("tigre6.png"));
-            framesTigre.push(cc.spriteFrameCache.getSpriteFrame("tigre7.png"));
-            framesTigre.push(cc.spriteFrameCache.getSpriteFrame("tigre8.png"));
+            while (insertados < this.numBloques) {
 
 
-            var animacionCocodrilo = new cc.Animation(framesCocdrilo, 0.1);
-            var animacionPanda = new cc.Animation(framesPanda, 0.1);
-            var animacionTigre = new cc.Animation(framesTigre, 0.1);
-
-
-            while (insertados < 50) {
+                var animal = "";
+                var framesBloque = [];
 
                 var num = Math.floor((Math.random() * 3) + 1);
 
@@ -239,33 +221,40 @@ var GameLayer = cc.Layer.extend({
                 switch (num){
 
                     case 1:
-                        accionAnimacionBloque =
-                            new cc.RepeatForever(new cc.Animate(animacionCocodrilo));
-                        break;
+                       animal = "cocodrilo";
+                       break;
 
                     case 2:
-                        accionAnimacionBloque =
-                            new cc.RepeatForever(new cc.Animate(animacionPanda));
+                        animal = "panda";
                         break;
 
                     case 3:
-                        accionAnimacionBloque =
-                            new cc.RepeatForever(new cc.Animate(animacionTigre));
+                        animal = "tigre";
                         break;
 
                 }
 
+                for (var i = 1; i <= 8; i++) {
+                    var str = animal + i + ".png";
+                    var frame = cc.spriteFrameCache.getSpriteFrame(str);
+                    framesBloque.push(frame);
+                }
 
-                var spriteBloqueActual = cc.Sprite.create("#cocodrilo1.png");
+
+                var animacionBloque = new cc.Animation(framesBloque, 0.1);
+
+                var accionAnimacionBloque = new cc.RepeatForever(new cc.Animate(animacionBloque));
+                var spriteBloqueActual = new cc.Sprite("#"+animal+"1.png");
+
                 spriteBloqueActual.runAction(accionAnimacionBloque);
 
-                var x = (spriteBloqueActual.width / 2) +
-                    (spriteBloqueActual.width * columna);
-                var y = (cc.winSize.height - spriteBloqueActual.height / 2) -
-                    (spriteBloqueActual.height * fila);
-                console.log("Insertado en: " + x + " ," + y);
+                var x = ( spriteBloqueActual.width / 2 ) +
+                    ( spriteBloqueActual.width * columna );
+                var y = (cc.winSize.height - spriteBloqueActual.height/2 ) -
+                    ( spriteBloqueActual.height * fila );
+                console.log("Insertado en: "+x+" ,"+y);
 
-                spriteBloqueActual.setPosition(cc.p(x, y));
+                spriteBloqueActual.setPosition(cc.p(x,y));
 
                 this.arrayBloques.push(spriteBloqueActual);
                 this.addChild(spriteBloqueActual);
@@ -273,10 +262,11 @@ var GameLayer = cc.Layer.extend({
                 insertados++;
                 columna++;
 
-                if (x + spriteBloqueActual.width / 2 > cc.winSize.width) {
+                if( x + spriteBloqueActual.width / 2 > cc.winSize.width){
                     columna = 0;
                     fila++;
                 }
+
             }
         }
     }
