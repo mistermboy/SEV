@@ -8,13 +8,15 @@ var res = {
     mapa1_tmx: "res/mapa1.tmx",
     moneda_png : "res/moneda.png",
     moneda_plist : "res/moneda.plist",
-    jugador_caminar_png : "res/jugador_caminar.png",
-    jugador_caminar_plist : "res/jugador_caminar.plist",
-    jugador_saltar_png : "res/jugador_saltar.png",
-    jugador_saltar_plist : "res/jugador_saltar.plist",
-    jugador_impactado_png : "res/jugador_impactado.png",
-    jugador_impactado_plist : "res/jugador_impactado.plist",
+    jugador_avanzando_png : "res/jugador_avanzando.png",
+    jugador_avanzando_plist : "res/jugador_avanzando.plist",
+    jugador_subiendo_png : "res/jugador_subiendo.png",
+    jugador_subiendo_plist : "res/jugador_subiendo.plist",
     boton_saltar_png: "res/boton_saltar.png",
+    animacion_cuervo_png: "res/animacion_cuervo.png",
+    animacion_cuervo_plist: "res/animacion_cuervo.plist",
+    animacioncocodrilo_plist : "res/animacioncocodrilo.plist",
+    animacioncocodrilo_png: "res/animacioncocodrilo.png",
 };
 
 var g_resources = [];

@@ -4,7 +4,7 @@ var MenuLayer = cc.Layer.extend({
         this._super();
         var size = cc.winSize;
 
-         // Fondo
+        // Fondo
         var spriteFondoTitulo= new cc.Sprite(res.menu_titulo_png);
         // Asigno posición central
         spriteFondoTitulo.setPosition(cc.p(size.width / 2, size.height / 2));
@@ -26,10 +26,17 @@ var MenuLayer = cc.Layer.extend({
         menu.setPosition(cc.p(size.width / 2, size.height * 0.25));
         // Añado el menú a la escena
         this.addChild(menu);
-        },
-        pulsarBotonJugar : function(){
-             cc.director.runScene(new GameScene());
-        },
+
+
+        return true;
+    }, pulsarBotonJugar : function(){
+         cc.director.runScene(new GameScene());
+    }
+
+
+
+
+
 
 });
 
