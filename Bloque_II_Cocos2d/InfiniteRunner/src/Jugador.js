@@ -4,17 +4,17 @@ var estadoSaltando = 2;
 
 var Jugador = cc.Class.extend({
     estado: estadoCaminando,
+    animacion:null,
+    aSaltar:null,
+    aCaminar:null,
     gameLayer:null,
     sprite:null,
     shape:null,
     body:null,
-    aaSaltar:null,
-    aaCaminar:null,
     vidas:3,
 ctor:function (gameLayer, posicion) {
     this.gameLayer = gameLayer;
 
-    // Crear animación
     var framesAnimacion = [];
     for (var i = 1; i <= 4; i++) {
         var str = "jugador_avanzando" + i + ".png";
@@ -24,8 +24,8 @@ ctor:function (gameLayer, posicion) {
     var animacion = new cc.Animation(framesAnimacion, 0.2);
     var actionAnimacionBucle =
         new cc.RepeatForever(new cc.Animate(animacion));
-    this.aaCaminar = actionAnimacionBucle;
-    this.aaCaminar.retain();
+    this.aCaminar = actionAnimacionBucle;
+    this.aCaminar.retain();
 
     var framesAnimacionSaltar = [];
         for (var i = 1; i <= 4; i++) {
@@ -34,12 +34,10 @@ ctor:function (gameLayer, posicion) {
             framesAnimacionSaltar.push(frame);
         }
      var animacionSaltar = new cc.Animation(framesAnimacionSaltar, 0.2);
-     this.aaSaltar  =
+     this.aSaltar  =
             new cc.RepeatForever(new cc.Animate(animacionSaltar));
 
-     this.aaSaltar.retain();
-
-
+     this.aSaltar.retain();
 
 
 
@@ -86,13 +84,31 @@ ctor:function (gameLayer, posicion) {
             this.estado = estadoSaltando;
             this.body.applyImpulse(cp.v(0, 1800), cp.v(0, 0));
             this.sprite.stopAllActions();
-            this.sprite.runAction(this.aaSaltar);
+            this.sprite.runAction(this.aSaltar);
         }
-  }, tocaSuelo: function(){
+  },
+    actualizar: function (){
+        switch ( this.estado ){
+            case estadoSaltando:
+                if (this.animacion != this.aSaltar){
+                    this.animacion = this.aSaltar;
+                    this.sprite.stopAllActions();
+                    this.sprite.runAction(this.animacion);
+                }
+                break;
+            case estadoCaminando:
+                if (this.animacion != this.aCaminar){
+                    this.animacion = this.aCaminar;
+                    this.sprite.stopAllActions();
+                    this.sprite.runAction(this.animacion);
+                }
+                break;
+        }
+    }, tocaSuelo: function(){
        if(this.estado != estadoCaminando){
            this.estado = estadoCaminando;
            this.sprite.stopAllActions();
-           this.sprite.runAction(this.aaCaminar);
+           this.sprite.runAction(this.aCaminar);
        }
    }
 

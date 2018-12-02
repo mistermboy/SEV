@@ -18,13 +18,12 @@ var GameLayer = cc.Layer.extend({
         this._super();
         var size = cc.winSize;
 
-        // CACHE
+
         cc.spriteFrameCache.addSpriteFrames(res.moneda_plist);
         cc.spriteFrameCache.addSpriteFrames(res.jugador_subiendo_plist);
         cc.spriteFrameCache.addSpriteFrames(res.jugador_avanzando_plist);
         cc.spriteFrameCache.addSpriteFrames(res.animacion_cuervo_plist);
-        cc.spriteFrameCache.addSpriteFrames(res.animacioncocodrilo_plist);
-
+        cc.spriteFrameCache.addSpriteFrames(res.animaciontigre_plist);
 
 
         // Inicializar Space
@@ -34,20 +33,18 @@ var GameLayer = cc.Layer.extend({
         this.depuracion = new cc.PhysicsDebugNode(this.space);
         this.addChild(this.depuracion, 10);
 
-        // suelo y jugador
         this.space.addCollisionHandler(tipoSuelo, tipoJugador,
               null, null, this.collisionSueloConJugador.bind(this), null);
-
-        // jugador y moneda
-        // IMPORTANTE: Invocamos el método antes de resolver la colisión (realmente no habrá colisión por la propiedad SENSOR de la Moneda).
-        this.space.addCollisionHandler(tipoJugador, tipoMoneda,
-              null, this.collisionJugadorConMoneda.bind(this), null, null);
 
         this.space.addCollisionHandler(tipoJugador, tipoEnemigo,
             null, this.collisionJugadorConEnemigo.bind(this), null, null);
 
         this.space.addCollisionHandler(tipoJugador, tipoPincho,
             null, this.collisionJugadorConPinchos.bind(this), null, null);
+
+        this.space.addCollisionHandler(tipoJugador, tipoMoneda,
+              null, this.collisionJugadorConMoneda.bind(this), null, null);
+
 
 
         this.jugador = new Jugador(this, cc.p(50,150));
@@ -109,9 +106,9 @@ var GameLayer = cc.Layer.extend({
              this.jugador.body.vy = 450;
          }
 
-         // actualizar cámara (posición de la capa).
+
          var posicionXJugador = this.jugador.body.p.x - 200;
-         var posicionYJugador = this.jugador.body.p.y-100; //-100 para que no se vea la parte sin nada de abajo al principio.
+         var posicionYJugador = this.jugador.body.p.y-100;
          this.setPosition(cc.p( -posicionXJugador,-posicionYJugador));
 
 
@@ -119,12 +116,19 @@ var GameLayer = cc.Layer.extend({
           if( this.jugador.body.p.y < -100){
              this.jugador.body.p = cc.p(50,150);
               this.jugador.vidas=3;
-              this.getParent().getChildByTag(idCapaControles).ponerVidas(this.jugador.vidas);
+              this.getParent().getChildByTag(idCapaControles).setVidas(this.jugador.vidas);
           }
 
         // Eliminar formas:
          for(var i = 0; i < this.formasEliminar.length; i++) {
             var shape = this.formasEliminar[i];
+
+             for (var i = 0; i < this.enemigos.length; i++) {
+                 if (this.enemigos[i].shape == shape) {
+                     this.enemigos[i].eliminar();
+                     this.enemigos.splice(i, 1);
+                 }
+             }
 
             for (var i = 0; i < this.monedas.length; i++) {
               if (this.monedas[i].shape == shape) {
@@ -132,12 +136,7 @@ var GameLayer = cc.Layer.extend({
                   this.monedas.splice(i, 1);
               }
             }
-             for (var i = 0; i < this.enemigos.length; i++) {
-                 if (this.enemigos[i].shape == shape) {
-                     this.enemigos[i].eliminar();
-                     this.enemigos.splice(i, 1);
-                 }
-             }
+
              for (var i = 0; i < this.pinchos.length; i++) {
                  if (this.pinchos[i].shape == shape) {
                      this.pinchos[i].eliminar();
@@ -155,12 +154,10 @@ var GameLayer = cc.Layer.extend({
          // Ancho del mapa
          this.mapaAncho = this.mapa.getContentSize().width;
 
-         // Solicitar los objeto dentro de la capa Suelos
          var grupoSuelos = this.mapa.getObjectGroup("Suelos");
          var suelosArray = grupoSuelos.getObjects();
 
-         // Los objetos de la capa suelos se transforman a
-         // formas estáticas de Chipmunk ( SegmentShape ).
+
          for (var i = 0; i < suelosArray.length; i++) {
              var suelo = suelosArray[i];
              var puntos = suelo.polylinePoints;
@@ -199,7 +196,7 @@ var GameLayer = cc.Layer.extend({
         var grupoEnemigosPinchos = this.mapa.getObjectGroup("Pinchos");
         var pinchosArray = grupoEnemigosPinchos.getObjects();
         for (var i = 0; i < pinchosArray.length; i++) {
-            var pincho = new EnemigoPinchos(this,
+            var pincho = new Pinchos(this,
                 cc.p(pinchosArray[i]["x"],pinchosArray[i]["y"]));
 
             this.pinchos.push(pincho);
@@ -210,19 +207,17 @@ var GameLayer = cc.Layer.extend({
       },collisionSueloConJugador:function (arbiter, space) {
          this.jugador.tocaSuelo();
       },collisionJugadorConMoneda:function (arbiter, space) {
+
         this._emitter.setEmissionRate(5);
         this.tiempoEfecto = 3;
 
-
-        // Impulso extra
         this.jugador.body.applyImpulse(cp.v(300, 0), cp.v(0, 0));
 
-        // Marcar la moneda para eliminarla
         var shapes = arbiter.getShapes();
-        // shapes[0] es el jugador
+
         this.formasEliminar.push(shapes[1]);
         var capaControles = this.getParent().getChildByTag(idCapaControles);
-        capaControles.cogerMoneda();
+        capaControles.addMonedas();
 
      },collisionJugadorConEnemigo:function (arbiter, space) {
         this._emitter.setEmissionRate(1);
@@ -232,12 +227,12 @@ var GameLayer = cc.Layer.extend({
         this.formasEliminar.push(shapes[1]);
         var capaControles = this.getParent().getChildByTag(idCapaControles);
         this.jugador.vidas--;
-        capaControles.ponerVidas(this.jugador.vidas);
+        capaControles.setVidas(this.jugador.vidas);
 
         if(capaControles.vidas<=0){
             this.jugador.body.p = cc.p(50,150);
             this.jugador.vidas=3;
-            capaControles.ponerVidas(this.jugador.vidas);
+            capaControles.setVidas(this.jugador.vidas);
         }
 
     },collisionJugadorConPinchos:function (arbiter, space) {
@@ -250,7 +245,7 @@ var GameLayer = cc.Layer.extend({
         //this.jugador.vidas =0;
         this.jugador.body.p = cc.p(50, 150);
         this.jugador.vidas =3;
-        capaControles.ponerVidas(this.jugador.vidas);
+        capaControles.setVidas(this.jugador.vidas);
 
     }
 

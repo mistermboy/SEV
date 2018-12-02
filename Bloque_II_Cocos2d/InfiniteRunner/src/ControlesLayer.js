@@ -9,18 +9,6 @@ var ControlesLayer = cc.Layer.extend({
         this._super();
         var size = cc.winSize;
 
-        //Monedas que ha conseguido el jugador
-        this.etiquetaMonedas=new cc.LabelTTF("Monedas: 0","Helvetica",20);
-        this.etiquetaMonedas.setPosition(cc.p(size.width*0.1, size.height*0.8));
-        this.etiquetaMonedas.fillStyle.color="#000000";
-        this.addChild(this.etiquetaMonedas);
-
-
-        //Vidas del jugador
-        this.etiquetaVidas=new cc.LabelTTF("Vidas: 3","Helvetica",20);
-        this.etiquetaVidas.setPosition(cc.p(size.width*0.1, size.height*0.9));
-        this.etiquetaVidas.fillStyle.color="#000000";
-        this.addChild(this.etiquetaVidas);
 
         // BotonSaltar
         this.spriteBotonSaltar = cc.Sprite.create(res.boton_saltar_png);
@@ -28,6 +16,21 @@ var ControlesLayer = cc.Layer.extend({
             cc.p(size.width*0.8, size.height*0.5));
 
         this.addChild(this.spriteBotonSaltar);
+
+
+        //Vidas
+        this.etiquetaVidas=new cc.LabelTTF("Vidas: 3","Helvetica",20);
+        this.etiquetaVidas.setPosition(cc.p(size.width*0.1, size.height*0.9));
+        this.etiquetaVidas.fillStyle.color="#000000";
+        this.addChild(this.etiquetaVidas);
+
+        //Monedas
+        this.etiquetaMonedas=new cc.LabelTTF("Monedas: 0","Helvetica",20);
+        this.etiquetaMonedas.setPosition(cc.p(size.width*0.1, size.height*0.8));
+        this.etiquetaMonedas.fillStyle.color="#000000";
+        this.addChild(this.etiquetaMonedas);
+
+
 
         // Registrar Mouse Down
         cc.eventManager.addListener({
@@ -55,9 +58,9 @@ var ControlesLayer = cc.Layer.extend({
             gameLayer.jugador.saltar();
 
         }
-    },ponerVidas:function (vidasR) {
-        this.etiquetaVidas.setString("Vidas: "+ vidasR);
-    },cogerMoneda:function() {
+    },setVidas:function (vidas) {
+        this.etiquetaVidas.setString("Vidas: "+ vidas);
+    },addMonedas:function() {
         this.monedas++;
         this.etiquetaMonedas.setString("Monedas: "+ this.monedas);
     }

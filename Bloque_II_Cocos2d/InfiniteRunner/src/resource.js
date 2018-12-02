@@ -15,8 +15,8 @@ var res = {
     boton_saltar_png: "res/boton_saltar.png",
     animacion_cuervo_png: "res/animacion_cuervo.png",
     animacion_cuervo_plist: "res/animacion_cuervo.plist",
-    animacioncocodrilo_plist : "res/animacioncocodrilo.plist",
-    animacioncocodrilo_png: "res/animacioncocodrilo.png",
+    animaciontigre_plist : "res/animaciontigre.plist",
+    animaciontigre_png: "res/animaciontigre.png",
 };
 
 var g_resources = [];
