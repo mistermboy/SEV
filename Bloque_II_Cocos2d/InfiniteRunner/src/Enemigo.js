@@ -42,7 +42,30 @@ ctor:function (gameLayer, posicion) {
 
 }, update:function (dt, jugadorX) {
 
-      this.tiempoSalto = this.tiempoSalto + dt;
+
+        if ( this.body.vx < 0.005 && this.body.vx > -0.005){
+            this.orientacion = this.orientacion *-1;
+        }
+
+        if ( this.orientacion > 0){
+            this.sprite.flippedX = true; // Invertir Sprite
+            if (this.body.vx < 100){
+                this.body.applyImpulse(cp.v(300, 0), cp.v(0, 0));
+            } else { // vx mayor más de 100
+                this.body.vx = 100;
+            }
+        }
+
+        if ( this.orientacion < 0) {
+            this.sprite.flippedX = false; // No invertir Sprite
+            if (this.body.vx > -100){
+                this.body.applyImpulse(cp.v(-300, 0), cp.v(0, 0));
+            } else { // vx nunca menor que -100
+                this.body.vx = -100; //limitado
+            }
+        }
+
+        this.tiempoSalto = this.tiempoSalto + dt;
 
       if(this.tiempoSalto > this.tiempoEntreSaltos &&
          Math.abs( this.body.p.x - jugadorX ) < 500){

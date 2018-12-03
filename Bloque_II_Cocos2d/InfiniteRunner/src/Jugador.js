@@ -1,6 +1,7 @@
 
 var estadoCaminando = 1;
 var estadoSaltando = 2;
+var estadoImpactado = 3;
 
 var Jugador = cc.Class.extend({
     estado: estadoCaminando,
@@ -39,6 +40,16 @@ ctor:function (gameLayer, posicion) {
 
      this.aSaltar.retain();
 
+    var framesAnimacionImpactado = [];
+    for (var i = 1; i <= 4; i++) {
+        var str = "jugador_impactado" + i + ".png";
+        var frame = cc.spriteFrameCache.getSpriteFrame(str);
+        framesAnimacionImpactado.push(frame);
+    }
+    var animacionImpactado = new cc.Animation(framesAnimacionImpactado, 0.2);
+    this.aImpactado =
+        new cc.Repeat( new cc.Animate(animacionImpactado) , 2  );
+    this.aImpactado.retain();
 
 
 
@@ -89,6 +100,17 @@ ctor:function (gameLayer, posicion) {
   },
     actualizar: function (){
         switch ( this.estado ){
+            case estadoImpactado:
+                if (this.animacion != this.aImpactado){
+                    this.animacion = this.aImpactado;
+                    this.sprite.stopAllActions();
+                    this.sprite.runAction(
+                        cc.sequence(
+                            this.animacion,
+                            cc.callFunc(this.finAnimacionImpactado(), this) )
+                    );
+                }
+                break;
             case estadoSaltando:
                 if (this.animacion != this.aSaltar){
                     this.animacion = this.aSaltar;
@@ -110,7 +132,18 @@ ctor:function (gameLayer, posicion) {
            this.sprite.stopAllActions();
            this.sprite.runAction(this.aCaminar);
        }
-   }
+   },impactado: function(){
+        if(this.estado != estadoImpactado){
+            this.estado = estadoImpactado;
+        }
+    },
+    finAnimacionImpactado: function(){
+    if(this.estado == estadoImpactado){
+        this.estado = estadoCaminando;
+    }
+}
+
+
 
 
 

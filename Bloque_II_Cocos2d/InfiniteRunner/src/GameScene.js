@@ -22,6 +22,7 @@ var GameLayer = cc.Layer.extend({
         cc.spriteFrameCache.addSpriteFrames(res.moneda_plist);
         cc.spriteFrameCache.addSpriteFrames(res.jugador_subiendo_plist);
         cc.spriteFrameCache.addSpriteFrames(res.jugador_avanzando_plist);
+        cc.spriteFrameCache.addSpriteFrames(res.jugador_impactado_plist);
         cc.spriteFrameCache.addSpriteFrames(res.animacion_cuervo_plist);
         cc.spriteFrameCache.addSpriteFrames(res.animaciontigre_plist);
 
@@ -34,7 +35,7 @@ var GameLayer = cc.Layer.extend({
         this.addChild(this.depuracion, 10);
 
         this.space.addCollisionHandler(tipoSuelo, tipoJugador,
-              null, null, this.collisionSueloConJugador.bind(this), null);
+              null, null, this.collisionSueloConJugador.bind(this), this.finCollisionSueloConJugador.bind(this));
 
         this.space.addCollisionHandler(tipoJugador, tipoEnemigo,
             null, this.collisionJugadorConEnemigo.bind(this), null, null);
@@ -62,7 +63,8 @@ var GameLayer = cc.Layer.extend({
 
         return true;
     },update:function (dt) {
-        this.jugador.estado = estadoSaltando;
+        this.jugador.actualizar();
+
         this.space.step(dt);
 
 
@@ -206,7 +208,9 @@ var GameLayer = cc.Layer.extend({
 
       },collisionSueloConJugador:function (arbiter, space) {
          this.jugador.tocaSuelo();
-      },collisionJugadorConMoneda:function (arbiter, space) {
+      },finCollisionSueloConJugador:function (arbiter, space) {
+        this.jugador.estado = estadoSaltando;
+    },collisionJugadorConMoneda:function (arbiter, space) {
 
         this._emitter.setEmissionRate(5);
         this.tiempoEfecto = 3;
@@ -220,6 +224,9 @@ var GameLayer = cc.Layer.extend({
         capaControles.addMonedas();
 
      },collisionJugadorConEnemigo:function (arbiter, space) {
+
+        this.jugador.impactado();
+
         this._emitter.setEmissionRate(1);
         this.tiempoEfecto = 1;
         // Marcar el enemigo para eliminarla
