@@ -30,6 +30,7 @@ var Pinchos = cc.Class.extend({
         var actionAnimacionBucle =
             new cc.RepeatForever(new cc.Animate(animacion));
 
+		this.sprite.runAction(actionAnimacionBucle);
 
 }, update:function (dt, jugadorX) {
 
